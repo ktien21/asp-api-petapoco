@@ -1,4 +1,3 @@
-nhanh dev
 
 test 
 nhanh dev 2
