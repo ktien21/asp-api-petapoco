@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MySqlConnector;
+using WEB.SERVICE;
 using WEB.SERVICE.PersonService;
 
 namespace WEB.API.Controllers
@@ -27,6 +29,32 @@ namespace WEB.API.Controllers
             catch (Exception e)
             {
 
+                return Ok(new
+                {
+                    msg = e.Message
+                });
+            }
+        }
+
+        [HttpPost("Insert")]
+        public IActionResult Post()
+        {
+            try
+            {
+                List<Person> p = new List<Person>()
+                {
+                    new Person{FullName = "nguoi 1", Address = "Lai Xa", CreateDate = DateTime.Now}
+                };
+                BulkMySql.BulkInsert(new DBM(), p.ToDataTable(), "dossier_person");
+                // BulkMySql.MySqlBulkCopy(new DBM(), p.ToDataTable(), "dossier_person");
+
+                return Ok(new
+                {
+                    msg = "Ok"
+                });
+            }
+            catch (Exception e)
+            {
                 return Ok(new
                 {
                     msg = e.Message
