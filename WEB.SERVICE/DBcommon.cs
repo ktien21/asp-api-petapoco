@@ -7,6 +7,52 @@ using System.Threading.Tasks;
 
 namespace WEB.SERVICE
 {
+    public static class ListExtensions
+    {
+        public static DataTable ToDataTable<T>(this IEnumerable<T> list) where T : class
+        {
+            DataTable dataTable = new DataTable();
+            // Lấy danh sách các thuộc tính từ đối tượng đầu tiên trong List<T>
+            if (typeof(T).IsArray) throw new Exception("ERROR TYPE");
+            var properties = typeof(T).GetProperties();
+            foreach (var property in properties)
+            {
+                var typeColum = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                switch (Type.GetTypeCode(typeColum))
+                {
+                    case TypeCode.Boolean:
+                        dataTable.Columns.Add(new DataColumn()
+                        {
+                            AllowDBNull = true,
+                            ColumnName = property.Name,
+                            DataType = typeof(ulong)
+                        });
+                        break;
+                    default:
+                        dataTable.Columns.Add(new DataColumn
+                        {
+                            AllowDBNull = true,
+                            ColumnName = property.Name,
+                            DataType = typeColum
+                        });
+                        break;
+                }
+            }
+
+            // Thêm các dòng từ List vào DataTable
+            foreach (var item in list)
+            {
+                DataRow row = dataTable.NewRow();
+                foreach (var property in properties)
+                {
+                    row[property.Name] = property.GetValue(item) ?? DBNull.Value;
+                }
+                dataTable.Rows.Add(row);
+            }
+
+            return dataTable;
+        }
+    }
     public class DBcommon
     {
         public static Exception ThrowException(string msg, Exception? e = null)

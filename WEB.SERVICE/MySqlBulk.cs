@@ -53,10 +53,6 @@ namespace WEB.SERVICE
                 rowEffected = adapter.DeleteCommand.ExecuteNonQuery();
                 return "";
             }
-            catch (Exception e)
-            {
-                return e.ToString();
-            }
             finally
             {
                 dbm.CallDispose();
@@ -101,10 +97,6 @@ namespace WEB.SERVICE
                         throw ThrowException($"BulkMySql. Merge data error - rowInsert: {num} - tableRows: {table.Rows.Count}");
                 }
                 return "";
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
@@ -190,10 +182,6 @@ namespace WEB.SERVICE
 
                 return "";
             }
-            catch (Exception e)
-            {
-                throw;
-            }
             finally
             {
                 table.Dispose();
@@ -234,10 +222,6 @@ namespace WEB.SERVICE
                     }
                 }
                 return "";
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
